@@ -7,17 +7,17 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
-    {% comment %} <title>RBGH CSD</title> {% endcomment %}
+    
     <title>Company</title>
     <meta content="" name="description" />
     <meta content="" name="keywords" />
 
     <!-- Favicons -->
-    <link
+    {% comment %} <link
       rel="icon"
       href="{% static 'assets/img/logo.png' %}"
       type="image/jpg"
-    />
+    /> {% endcomment %}
 
     <!-- Google Fonts 
   <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -103,7 +103,7 @@
     <header id="header" class="header fixed-top d-flex align-items-center">
       <div class="d-flex align-items-center justify-content-between">
         <a href="/" class="logo d-flex align-items-center">
-          <img src="{% static 'assets/img/logo.png' %}" alt="" />
+          {% comment %} <img src="{% static 'assets/img/logo.png' %}" alt="" /> {% endcomment %}
           <span>Company</span>
           {% comment %} <span class="d-none d-lg-block">RBGH CSD</span> {% endcomment %}
         </a>
