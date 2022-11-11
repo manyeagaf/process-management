@@ -1,0 +1,43 @@
+<div class="modal fade" id="smallModal" tabindex="-1">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Assign request {{ request.request_id}}</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form
+            method="POST"
+            action="{% url 'tickets:request-assign' request.request_id %}"
+            enctype="multipart/form-data"
+          >
+            {% csrf_token %} 
+            {{form.as_p}}
+            <input type="text" id="id" name="id" value = "{{ request.request_id }}" disabled><br><br>
+            
+            <div class="d-grid gap-2">
+            <div class = "btn-group fill-right py-3">
+              <button type="submit" class="btn btn-primary">
+                Assign
+              </button>
+              <button
+            type="button"
+            class="btn btn-secondary mx-2"
+            data-bs-dismiss="modal"
+          >
+            Cancel
+          </button>
+            </div>
+            </div>
+          </form>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</td>

@@ -1,0 +1,118 @@
+{% extends 'access_control/base.html' %}
+{% block content %}
+<div class="pagetitle">
+    <h1>Dashboard</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="supadhome.html">Home</a></li>
+        <li class="breadcrumb-item">Users</li>
+        <li class="breadcrumb-item active">CSD Admin</li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
+  <section class="section dashboard">
+    <div class="row">
+
+      <script type="text/javascript">
+        $(document).ready( function () {
+          $('#dataTable').DataTable();
+        } );
+        </script>
+
+
+      <!-- Left side columns -->
+      <div class="col-lg-12">
+        <div class="row">
+          <!-- Recent Requests -->
+          <div class="col-12">
+            <div class="card" style="border-radius: 7px;">
+              <br>
+              <div class="well-sm col-sm-12" style="padding-right: 22px;">
+                <button type="button" style="float: right;" class="btn btn-primary mt-1" data-bs-toggle="modal" data-bs-target="#verticalycentered2"><i class="bi bi-plus-square"></i>
+              New User
+            </button>
+           <div class="modal fade" id="verticalycentered2" tabindex="-1">
+              <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Add Admin</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">   
+            <!--begin::Form-->
+<form 
+class="row gy-4" 
+method="POST"
+action="{% url 'users:user-create'%}"
+enctype="multipart/form-data"
+>
+  <!--begin::Input group-->
+  {% csrf_token %}
+  {{ form.as_p}}
+
+  <div class="d-grid gap-2">
+                              
+    <div class = "btn-group fill-right py-3">
+      <button type="submit" class="btn btn-primary">
+        Create User
+      </button>
+      <button
+    type="button"
+    class="btn btn-secondary mx-2"
+    data-bs-dismiss="modal"
+  >
+    Cancel
+  </button>
+    </div>
+    </div>
+      <!--end::Col-->
+  <!--end::Input group-->
+</form>
+<!--end::Form-->
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+              <div class="card-body" >
+                <h5 class="card-title" style="color: black;">CSD Admins</h5>
+                
+                <table id="dataTable" class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col" style="text-align:center">Staff ID</th>
+                      <th scope="col" style="text-align:center">Name</th>
+                      <th scope="col" style="text-align:center">Email</th>
+                      <th scope="col" style="text-align:center">Role</th>
+                      <th scope="col" style="text-align:center">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for admin in csd_admins %}
+                    <tr style="text-align:center">
+                        <th scope="row">{{admin.staff_id }}</th>
+                        <td>{{admin}}</td>
+                        <td>{{admin.emial}}</td>
+                        <td>{{admin.get_user_type_display}}</td>
+                        <th style="text-align:center" scope="row">
+                          <a href="{% url 'access_control:user-action'  admin.id %}"><i class="bi bi-eye-fill" data-toggle="tooltip" data-placement="top" title="View"></i></a> 
+                        </th>
+                    </tr>
+                    {% endfor %}
+                    
+                  </tbody>
+                </table>
+
+              </div>
+
+            </div>
+          </div><!-- End Recent Sales -->
+
+        </div>
+      </div><!-- End Left side columns -->
+
+    </div>
+  </section>
+{% endblock %}

@@ -1,0 +1,102 @@
+
+<aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="/">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <!-- End Dashboard Nav -->
+
+      {% comment %} <li class="nav-item">
+        <a
+          class="nav-link"
+          data-bs-target="#components-nav"
+          data-bs-toggle="collapse"
+          href="#"
+        >
+          <i class="bi bi-menu-button-wide"></i><span>Requests</span
+          ><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        
+         <ul
+          id="components-nav"
+          class="nav-content"
+          data-bs-parent="#sidebar-nav"
+        >
+        <li > 
+          <a href="{% url 'access_control:branch-staffs' %}"  {% if page == 'branchStaffs'%} style = "color:red" {% endif %} >
+            <i class="bi bi-circle" ></i><span>Branch Staff</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="{% url 'access_control:csd-staffs' %}" {% if page == 'csdStaffs'%} style = "color:red" {% endif %}>
+            <i class="bi bi-circle"></i><span>CSD Staff</span>
+          </a>
+        </li>
+          
+        <li>
+          <a href="{% url 'access_control:csd-admins' %}" {% if page == 'csdAdmins'%} style = "color:red" {% endif %}>
+            <i class="bi bi-circle"></i><span>CSD Admin Staff</span>
+          </a>
+        </li>
+          
+        </ul>
+      </li> {% endcomment %}
+
+      {% if user.get_user_type_display == 'access control admin' %}
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          data-bs-target="#components-nav"
+          data-bs-toggle="collapse"
+          href="#"
+        >
+          <i class="bi bi-menu-button-wide"></i><span>Pending Approvals</span
+          ><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        
+         <ul
+          id="components-nav"
+          class="nav-content"
+          data-bs-parent="#sidebar-nav"
+        >
+        <li > 
+          <a href="{% url 'access_control:pending-users-creation' %}"  {% if page == 'pendingUsers'%} style = "color:red" {% endif %} >
+            <i class="bi bi-circle" ></i><span>Pending Accounts</span>
+          </a>
+        </li>
+        
+        {% comment %} <li > 
+          <a href="{% url 'access_control:pending-users-deletion' %}"  {% if page == 'pendingUserDeletion'%} style = "color:red" {% endif %} >
+            <i class="bi bi-circle" ></i><span>Pending Privileges</span>
+          </a>
+        </li> {% endcomment %}
+
+         <li > 
+          <a href="{% url 'access_control:pending-privileges' %}"  {% if page == 'pendingPrivilegeCreations'%} style = "color:red" {% endif %} >
+            <i class="bi bi-circle" ></i><span>Pending Privileges</span>
+          </a>
+        </li> 
+        
+        </ul>
+      </li>
+      {% endif %}
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'access_control:user-privileges' %}"  {% if page == 'privileges'%} style = "color:red" {% endif %}>
+          <i class='bx bxs-user-badge'></i>
+          <span>Privileges</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="/accounts/logout/"  >
+          <i class="bi bi-box-arrow-in-right"></i>
+          <span>Logout</span>
+        </a>
+      </li>
+      <!-- End Login Page Nav -->
+    </ul>
+  </aside>

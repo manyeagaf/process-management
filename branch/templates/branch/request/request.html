@@ -1,0 +1,320 @@
+{% extends 'branch/base.html' %}
+{% block content %}
+<div class="pagetitle">
+    <h1>Request</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item">Pages</li>
+        <li class="breadcrumb-item active">Request</li>
+      </ol>
+    </nav>
+  </div>
+  <!-- End Page Title -->
+  
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title" style="color: grey">REQUEST INFORMATION</h5>
+            <div>
+              <h6 style="font-weight: bold">Request Number</h6>
+              <p>#{{request.request_id}}</p>
+            </div>
+  
+            <div>
+              <h6 style="font-weight: bold">Date Submitted</h6>
+              <p>{{request.created_at}}</p>
+            </div>
+            <hr />
+            <div>
+              <h6 style="font-weight: bold">Status</h6>
+              <p>{{request.status}}</p>
+            </div>
+  
+            <div>
+              <h6 style="font-weight: bold">Type</h6>
+              <p>{{request.request_type}}</p>
+            </div>
+            <hr />
+            <div>
+              <h6 style="font-weight: bold">Requestor</h6>
+              <p>{{initiator}}, {{initiator.get_branch_display}}</p>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col-lg-12 col-md-12 label">Files:</div>
+              <div class="col-lg-12 col-md-12">
+                {%for attachment in attachments %}
+              <a href="{{ attachment.document.url }}" target="_blank"
+                ><p>{{ attachment.document.url | slice:"28:" }}</p></a
+              >
+              {% endfor %}
+              </div>
+            </hr>
+            </div>
+          
+            <!--
+            <div class="col-md-12 text-center">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verticalycentered">
+              Update Request
+            </button>
+            <div class="modal fade" id="verticalycentered" tabindex="-1">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Update Request</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                   
+            <form class="row g-3">
+              <div class="col-md-6">
+                <label for="reqnum" class="form-label">Request Number</label>
+                <input type="number" class="form-control" id="reqnum" name="reqnum" readonly>
+              </div>
+              <div class="col-md-6">
+                <label for="reqtype" class="form-label">Type</label>
+                <input type="text" class="form-control" id="reqtype" name="reqtype" readonly>
+              </div>
+             <div class="col-md-6">
+                <label for="reqtitle" class="form-label">Title</label>
+                <input type="text" class="form-control" id="reqtitle" name="reqtitle" readonly>
+              </div>
+              <div class="col-md-6">
+                <label for="subdate" class="form-label">Date Submitted</label>
+                <input type="date" class="form-control" id="subdate" name="subdate" readonly>
+              </div>
+              <div class="col-md-6">
+                <label for="requestor" class="form-label">Requestor</label>
+                <input type="text" class="form-control" id="requestor" name="requestor" readonly>
+              </div>
+              <div class="col-md-6">
+                <label for="assignee" class="form-label">Assignee</label>
+                <input type="text" class="form-control" id="assignee" name="assignee" readonly>
+              </div>
+              <div class="col-md-6">
+                <label for="reqstatus" class="form-label">Status</label>
+                <select id="reqstatus" name="reqstatus" class="form-control form-select" required data-allow-clear="true">
+                <option value=""></option><option>New</option><option>Assigned</option><option>Pending</option><option>Completed</option><option>Officer responded</option><option>Requestor responded</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="compdate" class="form-label">Date Completed</label>
+                <input type="date" class="form-control" id="compdate" name="compdate" readonly>
+              </div>
+            </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Update</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> -->
+          </div>
+        </div>
+      </div>
+  
+      <div class="col-lg-8">
+        <div class="card">
+          <div class="card-body">
+            <h3 class="card-title" style="color: black">
+              {{request.request_type}} for {{request.customer_name}}.
+            </h3>
+            <div class="row">
+              <div class="col-lg-6 col-md-4 label">
+                Sent: {{request.created_at}}
+              </div>
+              <div class="col-lg-2 col-md-4">By: {{initiator}}</div>
+              <div class="col-lg-4 col-md-4">
+                <button
+                  style="float: right"
+                  class="btn btn-primary mb-1"
+                  data-bs-toggle="modal"
+                  data-bs-target="#largeModal"
+                >
+                  View thread
+                </button>
+              </div>
+              <div class="modal fade" id="largeModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Thread</h5>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      {% for comment in comments %}
+                      <hr />
+                      <div>
+                        {% if comment.owner == user %}
+                        <h6 style="font-weight: bold; color: #009bc9">
+                          {{comment.owner}} | {{comment.created_at}}
+                        </h6>
+                        {% else %}
+                        <h6 style="font-weight: bold">
+                          {{comment.owner}} | {{comment.created_at}}
+                        </h6>
+                        {% endif %}
+  
+                        <span>{{comment.comment}} </span>
+                        {% for attc in attachments_with_comments %}
+                        <div>
+                          {% if attc.comment == comment %}
+                          <a href="{{ attc.document.url }}">{{ attc.document.url | slice:"28:" }}</a>
+                          {% endif %}
+                        </div>
+                        {% endfor %}
+                      </div>
+                      
+                      {% endfor %}
+  
+                      
+                   
+                    <div class="modal-footer">
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <hr />
+            {% for comment in recent_comments %}
+            <div>
+              {% if comment.owner == user %}
+              <h6 style="font-weight: bold; color: #009bc9">
+                {{comment.owner}} | {{comment.created_at}}
+              </h6>
+              {% else %}
+              <h6 style="font-weight: bold">
+                {{comment.owner}} | {{comment.created_at}}
+              </h6>
+              {% endif %}
+              <span
+                >{{comment.comment}}</span
+              >
+              {% for attc in attachments_with_comments %}
+              <div>
+                {% if attc.comment == comment %}
+                <a href="{{ attc.document.url }}">{{ attc.document.url | slice:"28:" }}</a>
+                {% endif %}
+              </div>
+              {% endfor %}
+            </div>
+            <hr />
+            {% endfor %}
+            <br />
+            {% if request.is_archieved %}
+            <h4 style = "color:red">This request have been archieved</h4>
+            {% else %}
+            <form action="/requests/comment/{{ request.request_id }}/"
+            method="post"
+            enctype="multipart/form-data"
+            >
+            
+            
+              {%csrf_token%}
+              <div class="row gy-4">
+                <div class="col-md-12">
+                  <textarea
+                    class="form-control"
+                    name="message"
+                    rows="6"
+                    placeholder="Message"
+                    
+                  ></textarea>
+                </div>
+                <input
+                        type="file"
+                        class="filepond"
+                        name="filepond"
+                        multiple
+                        data-allow-reorder="true"
+                        data-max-file-size="3MB"
+                        data-max-files="3"
+                      />
+
+                      <small class = "form-text" style = "color:red">
+                        Hold CTRL and click on files for muiltiple selection
+                      </small>
+                      
+                        <div class="row mt-3">
+                          <button type="submit" class="btn btn-primary my-2">Update</button>
+                          {% if request.status.slug == 'closed' %}
+                          This ticket was closed on {{ request.closed_at }} send a message to re-open it
+                          {% else %}
+                          {% if request.status.slug != 'pending' %}
+                          <a href="#" data-bs-toggle="modal" data-bs-target="#smallModal" class = "btn btn-danger">
+                            Close Ticket
+                            </a>
+                          {% endif %}
+                          {% endif %}
+                        </div>
+              </div>
+              <div class="modal fade" id="smallModal" tabindex="-1">
+                <div class="modal-dialog modal-md">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Close request</h5>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      Are you sure you want to close this ticket?
+  
+                      <div class="d-grid gap-2">
+                      
+                        <div class = "btn-group fill-right py-3">
+                          <a href =  "{% url 'tickets:request-close' request.request_id %}" class = "btn btn-primary">
+                            Close Request
+                          </a>
+                          <button
+                        type="button"
+                        class="btn btn-secondary mx-2"
+                        data-bs-dismiss="modal"
+                      >
+                        Cancel
+                      </button>
+                        </div>
+                        
+                        
+                        
+                        </div>
+                    </div>
+                    
+                </div>
+              </div>
+
+
+
+
+            </form>
+            {% endif %}
+            
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

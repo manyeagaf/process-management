@@ -1,0 +1,191 @@
+{% extends 'officer/base.html' %}
+{% block content %}
+<div class="pagetitle">
+  <h1>Dashboard</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+      <li class="breadcrumb-item active">Dashboard</li>
+    </ol>
+  </nav>
+</div>
+<!-- End Page Title -->
+
+<section class="section dashboard">
+  <div class="row">
+    <!-- Left side columns -->
+    <div class="col-lg-12">
+      <div class="row">
+        <!-- Sales Card -->
+        <div class="col-sm-2 col-md-4">
+          <div
+            class="card info-card sales-card"
+            style="background-color: #009bc9; border-radius: 7px"
+          >
+            <div class="card-body">
+              <h5 class="card-title" style="color: whitesmoke">
+                Assigned <span style="color: whitesmoke">| Requests</span>
+              </h5>
+
+              <div class="d-flex align-items-center">
+                <div
+                  class="card-icon rounded-circle d-flex align-items-center justify-content-center"
+                >
+                  <i class="bi bi-arrow-down-left-circle"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{my_requests_this_month|length}}</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Completed Card -->
+
+        <!-- Pending Card -->
+        <div class="col-sm-2 col-md-4">
+          <div
+            class="card info-card revenue-card"
+            style="background-color: #c53191; border-radius: 7px"
+          >
+            <div class="card-body">
+              <h5 class="card-title" style="color: whitesmoke">
+                Pending <span style="color: whitesmoke">| Requests</span>
+              </h5>
+
+              <div class="d-flex align-items-center">
+                <div
+                  class="card-icon rounded-circle d-flex align-items-center justify-content-center"
+                >
+                  <i class="bi bi-check2"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{pending_this_month|length}}</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Pending Card -->
+
+        <div class="col-sm-2 col-md-4">
+          <div
+            class="card info-card revenue-card"
+            style="background-color: #94348d; border-radius: 7px"
+          >
+            <div class="card-body">
+              <h5 class="card-title" style="color: whitesmoke">
+                Closed <span style="color: whitesmoke">| Requests</span>
+              </h5>
+
+              <div class="d-flex align-items-center">
+                <div
+                  class="card-icon rounded-circle d-flex align-items-center justify-content-center"
+                >
+                  <i class="bi bi-check2-all"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{closed_this_month|length}}</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Requests -->
+        <div class="col-lg-8">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Request Types</h5>
+
+              <!-- Bar Chart -->
+              <div id="barChart"></div>
+
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  new ApexCharts(document.querySelector("#barChart"), {
+                    series: [
+                      {
+                        data: {{rts_count|safe}},
+                      },
+                    ],
+                    chart: {
+                      type: "bar",
+                      height: 350,
+                    },
+                    plotOptions: {
+                      bar: {
+                        borderRadius: 4,
+                        horizontal: true,
+                      },
+                    },
+                    dataLabels: {
+                      enabled: true,
+                    },
+                    xaxis: {
+                      categories: {{rts|safe}}
+                    },
+                  }).render();
+                });
+              </script>
+              <!-- End Bar Chart -->
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="card" style="min-height: 450px">
+            <div class="card-body">
+              <h5 class="card-title">Resolution Rate</h5>
+
+              <!-- Bar Chart -->
+              <div id="chart"></div>
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  new ApexCharts(document.querySelector("#chart"), {
+                    series: [{{resolution_rate|safe}}],
+                    chart: {
+                      height: 280,
+                      type: "radialBar",
+                    },
+                    plotOptions: {
+                      radialBar: {
+                        hollow: {
+                          margin: 15,
+                          size: "70%",
+                        },
+
+                        dataLabels: {
+                          showOn: "always",
+                          name: {
+                            offsetY: -10,
+                            show: true,
+                            color: "#888",
+                            fontSize: "13px",
+                          },
+                          value: {
+                            color: "#111",
+                            fontSize: "30px",
+                            show: true,
+                          },
+                        },
+                      },
+                    },
+
+                    stroke: {
+                      lineCap: "round",
+                    },
+                    labels: ["Rate"],
+                  }).render();
+                });
+              </script>
+              <!-- End Bar Chart -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Left side columns -->
+  </div>
+</section>
+{% endblock %}

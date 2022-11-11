@@ -1,0 +1,723 @@
+{% extends 'base_generic.html' %} {% load crispy_forms_tags %} {% block user %}
+{{ user.first_name }} {% endblock %} {% block content %}
+{% if rekt %}
+<div><h1>Rekt Enabled</h></div>
+{% endif %}
+{% if user.get_user_type_display == "admin" %}
+<div class="pagetitle">
+  <h1>Dashboard</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+      <li class="breadcrumb-item active">Dashboard</li>
+    </ol>
+  </nav>
+</div>
+<!-- End Page Title -->
+
+<section class="section dashboard">
+  <div class="row">
+    <!-- Left side columns -->
+    <div class="col-lg-8">
+      <div class="row">
+        <!-- Sales Card -->
+        <div class="col-sm-2 col-md-6">
+          <div
+            class="card info-card sales-card"
+            style="background-color: #009bc9; border-radius: 7px"
+          >
+            <div class="card-body">
+              <h5 class="card-title" style="color: whitesmoke">
+                Open <span style="color: whitesmoke">| Requests</span>
+              </h5>
+
+              <div class="d-flex align-items-center">
+                <div
+                  class="card-icon rounded-circle d-flex align-items-center justify-content-center"
+                >
+                  <i class="bi bi-arrow-down-left-circle"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{open_count}}</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Completed Card -->
+
+        <!-- Pending Card -->
+        <div class="col-sm-2 col-md-6">
+          <div
+            class="card info-card revenue-card"
+            style="background-color: #c53191; border-radius: 7px"
+          >
+            <div class="card-body">
+              <h5 class="card-title" style="color: whitesmoke">
+                Closed <span style="color: whitesmoke">| Requests</span>
+              </h5>
+
+              <div class="d-flex align-items-center">
+                <div
+                  class="card-icon rounded-circle d-flex align-items-center justify-content-center"
+                >
+                  <i class="bi bi-chevron-double-right"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{closed_count}}</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Pending Card -->
+
+        <!-- Recent Requests -->
+        <div class="col-12">
+          <div class="card" style="border-radius: 7px">
+            <div class="card-body">
+              <h5 class="card-title">Monthly Requests</h5>
+
+              <!-- Bar Chart -->
+              <div id="lineChart"></div>
+
+              <script>
+                var open_requests_this_month = {{open_requests_by_month|safe}}
+                var closed_requests_this_month = {{closed_requests_by_month|safe}}
+                var pending_requests_this_month = {{pending_requests_by_month|safe}}
+
+                document.addEventListener("DOMContentLoaded", () => {
+                  new ApexCharts(document.querySelector("#lineChart"), {
+                    series: [
+                      {
+                        name: "Open Requests",
+                        data: open_requests_this_month,
+                      },
+                      {
+                        name: "Closed Requests",
+                        data: closed_requests_this_month
+                      },
+                      {
+                        name: "Pending Requests",
+                        data: pending_requests_this_month,
+                      },
+                    ],
+                    chart: {
+                      height: 350,
+                      type: "line",
+                      zoom: {
+                        enabled: false,
+                      },
+                    },
+                    colors: ["#009bc9", "#C53191", "#94348d"],
+                    dataLabels: {
+                      enabled: false,
+                    },
+                    stroke: {
+                      curve: "straight",
+                    },
+                    grid: {
+                      row: {
+                        colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+                        opacity: 0.5,
+                      },
+                    },
+                    xaxis: {
+                      categories: [
+                        "Jan",
+                        "Feb",
+                        "Mar",
+                        "Apr",
+                        "May",
+                        "Jun",
+                        "Jul",
+                        "Aug",
+                        "Sep",
+                        "Oct",
+                        "Nov",
+                        "Dec",
+                      ],
+                    },
+                  }).render();
+                });
+              </script>
+              <!-- End Bar Chart -->
+            </div>
+          </div>
+        </div>
+        <!-- End Recent Sales -->
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Request Types</h5>
+              <!-- Bar Chart -->
+              <div id="barChart"></div>
+              <script>
+                var request_types = {{rts|safe}};
+                var request_types_count = {{rts_count|safe}}
+                document.addEventListener("DOMContentLoaded", () => {
+                  new ApexCharts(document.querySelector("#barChart"), {
+                    series: [
+                      {
+                        name: "Requests",
+                        data: request_types_count,
+                      },
+                    ],
+                    chart: {
+                      type: "bar",
+                      height: 350,
+                    },
+                    plotOptions: {
+                      bar: {
+                        borderRadius: 4,
+                        horizontal: true,
+                      },
+                    },
+                    dataLabels: {
+                      enabled: true,
+                    },
+                    xaxis: {
+                      categories: request_types,
+                    },
+                  }).render();
+                });
+              </script>
+              <!-- End Bar Chart -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Left side columns -->
+
+    <!-- Right side columns -->
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Resolution Rate</h5>
+
+          <!-- Bar Chart -->
+          <div id="chart"></div>
+
+          <script>
+            document.addEventListener("DOMContentLoaded", () => {
+              new ApexCharts(document.querySelector("#chart"), {
+                series: [{{resolution_rate|safe}}],
+                chart: {
+                  height: 280,
+                  type: "radialBar",
+                },
+                plotOptions: {
+                  radialBar: {
+                    hollow: {
+                      margin: 15,
+                      size: "70%",
+                    },
+
+                    dataLabels: {
+                      showOn: "always",
+                      name: {
+                        offsetY: -10,
+                        show: true,
+                        color: "#888",
+                        fontSize: "13px",
+                      },
+                      value: {
+                        color: "#111",
+                        fontSize: "30px",
+                        show: true,
+                      },
+                    },
+                  },
+                },
+
+                stroke: {
+                  lineCap: "round",
+                },
+                labels: ["Rate"],
+              }).render();
+            });
+          </script>
+          <!-- End Bar Chart -->
+        </div>
+      </div>
+
+      <!-- Website Traffic -->
+      <div class="card">
+        <div class="card-body pb-0">
+          <h5 class="card-title">Requests' Status</h5>
+          <div id="trafficChart" style="min-height: 500px" class="echart"></div>
+          <script>
+            document.addEventListener("DOMContentLoaded", () => {
+              echarts.init(document.querySelector("#trafficChart")).setOption({
+                tooltip: {
+                  trigger: "item",
+                },
+                legend: {
+                  top: "3%",
+                  left: "center",
+                },
+                series: [
+                  {
+                    name: "Staus",
+                    type: "pie",
+                    radius: ["40%", "70%"],
+                    avoidLabelOverlap: false,
+                    itemStyle: {
+                      normal: {
+                        label: {
+                          show: true,
+                          position: "inner",
+                          formatter: function (params) {
+                            return params.value;
+                          },
+                        },
+                        labelLine: {
+                          show: true,
+                        },
+                      },
+                    },
+                    label: {
+                      show: false,
+                      position: "center",
+                    },
+                    emphasis: {
+                      label: {
+                        show: true,
+                        fontSize: "18",
+                        fontWeight: "bold",
+                      },
+                    },
+                    labelLine: {
+                      show: true,
+                    },
+                    data: [
+                      {
+                        value: {{open_count|safe}},
+                        name: "Open",
+                      },
+                      {
+                        value: {{requestor_replied_count|safe}},
+                        name: "Requestor Replied",
+                      },
+                      {
+                        value: {{pending_count|safe}},
+                        name: "Pending",
+                      },
+                      {
+                        value: {{answered_count|safe}},
+                        name: "Answered",
+                      },
+                      {
+                        value: {{closed_count|safe}},
+                        name: "Closed",
+                      },
+                    ],
+                  },
+                ],
+              });
+            });
+          </script>
+        </div>
+      </div>
+      <!-- End Website Traffic -->
+    </div>
+
+    <!-- End Right side columns -->
+  </div>
+</section>
+{% elif user.get_user_type_display == "officer" %}
+<div class="pagetitle">
+  <h1>Dashboard</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+      <li class="breadcrumb-item active">Dashboard</li>
+    </ol>
+  </nav>
+</div>
+<!-- End Page Title -->
+
+<section class="section dashboard">
+  <div class="row">
+    <!-- Left side columns -->
+    <div class="col-lg-12">
+      <div class="row">
+        <!-- Sales Card -->
+        <div class="col-sm-2 col-md-4">
+          <div
+            class="card info-card sales-card"
+            style="background-color: #009bc9; border-radius: 7px"
+          >
+            <div class="card-body">
+              <h5 class="card-title" style="color: whitesmoke">
+                Assigned <span style="color: whitesmoke">| Requests</span>
+              </h5>
+
+              <div class="d-flex align-items-center">
+                <div
+                  class="card-icon rounded-circle d-flex align-items-center justify-content-center"
+                >
+                  <i class="bi bi-arrow-down-left-circle"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{my_requests_this_month|length}}</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Completed Card -->
+
+        <!-- Pending Card -->
+        <div class="col-sm-2 col-md-4">
+          <div
+            class="card info-card revenue-card"
+            style="background-color: #c53191; border-radius: 7px"
+          >
+            <div class="card-body">
+              <h5 class="card-title" style="color: whitesmoke">
+                Pending <span style="color: whitesmoke">| Requests</span>
+              </h5>
+
+              <div class="d-flex align-items-center">
+                <div
+                  class="card-icon rounded-circle d-flex align-items-center justify-content-center"
+                >
+                  <i class="bi bi-check2"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{pending_this_month|length}}</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Pending Card -->
+
+        <div class="col-sm-2 col-md-4">
+          <div
+            class="card info-card revenue-card"
+            style="background-color: #94348d; border-radius: 7px"
+          >
+            <div class="card-body">
+              <h5 class="card-title" style="color: whitesmoke">
+                Closed <span style="color: whitesmoke">| Requests</span>
+              </h5>
+
+              <div class="d-flex align-items-center">
+                <div
+                  class="card-icon rounded-circle d-flex align-items-center justify-content-center"
+                >
+                  <i class="bi bi-check2-all"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{closed_this_month|length}}</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Requests -->
+        <div class="col-lg-8">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Request Types</h5>
+
+              <!-- Bar Chart -->
+              <div id="barChart"></div>
+
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  new ApexCharts(document.querySelector("#barChart"), {
+                    series: [
+                      {
+                        data: {{rts_count|safe}},
+                      },
+                    ],
+                    chart: {
+                      type: "bar",
+                      height: 350,
+                    },
+                    plotOptions: {
+                      bar: {
+                        borderRadius: 4,
+                        horizontal: true,
+                      },
+                    },
+                    dataLabels: {
+                      enabled: true,
+                    },
+                    xaxis: {
+                      categories: {{rts|safe}}
+                    },
+                  }).render();
+                });
+              </script>
+              <!-- End Bar Chart -->
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="card" style="min-height: 450px">
+            <div class="card-body">
+              <h5 class="card-title">Resolution Rate</h5>
+
+              <!-- Bar Chart -->
+              <div id="chart"></div>
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  new ApexCharts(document.querySelector("#chart"), {
+                    series: [{{resolution_rate|safe}}],
+                    chart: {
+                      height: 280,
+                      type: "radialBar",
+                    },
+                    plotOptions: {
+                      radialBar: {
+                        hollow: {
+                          margin: 15,
+                          size: "70%",
+                        },
+
+                        dataLabels: {
+                          showOn: "always",
+                          name: {
+                            offsetY: -10,
+                            show: true,
+                            color: "#888",
+                            fontSize: "13px",
+                          },
+                          value: {
+                            color: "#111",
+                            fontSize: "30px",
+                            show: true,
+                          },
+                        },
+                      },
+                    },
+
+                    stroke: {
+                      lineCap: "round",
+                    },
+                    labels: ["Rate"],
+                  }).render();
+                });
+              </script>
+              <!-- End Bar Chart -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Left side columns -->
+  </div>
+</section>
+{% else %}
+<div class="pagetitle">
+  <h1>Dashboard</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+      <li class="breadcrumb-item active">Dashboard</li>
+    </ol>
+  </nav>
+</div>
+<!-- End Page Title -->
+
+<section class="section dashboard">
+  <div class="row">
+    <!-- Left side columns -->
+    <div class="col-lg-12">
+      <div class="row">
+        <!-- Sales Card -->
+        <div class="col-sm-2 col-md-4">
+          <div
+            class="card info-card sales-card"
+            style="background-color: #009bc9; border-radius: 7px"
+          >
+            <div class="card-body">
+              <h5 class="card-title" style="color: whitesmoke">
+                Submitted <span style="color: whitesmoke">| Requests</span>
+              </h5>
+
+              <div class="d-flex align-items-center">
+                <div
+                  class="card-icon rounded-circle d-flex align-items-center justify-content-center"
+                >
+                  <i class="bi bi-cursor"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{submitted_this_month|length}}</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Completed Card -->
+
+        <!-- Pending Card -->
+        <div class="col-sm-2 col-md-4">
+          <div
+            class="card info-card revenue-card"
+            style="background-color: #c53191; border-radius: 7px"
+          >
+            <div class="card-body">
+              <h5 class="card-title" style="color: whitesmoke">
+                Closed <span style="color: whitesmoke">| Requests</span>
+              </h5>
+
+              <div class="d-flex align-items-center">
+                <div
+                  class="card-icon rounded-circle d-flex align-items-center justify-content-center"
+                >
+                  <i class="bi bi-check2-all"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{closed_this_month|length}}</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Pending Card -->
+
+        <div class="col-sm-2 col-md-4">
+          <div
+            class="card info-card revenue-card"
+            style="background-color: #94348d; border-radius: 7px"
+          >
+            <div class="card-body">
+              <h5 class="card-title" style="color: whitesmoke">
+                Pending <span style="color: whitesmoke">| Requests</span>
+              </h5>
+
+              <div class="d-flex align-items-center">
+                <div
+                  class="card-icon rounded-circle d-flex align-items-center justify-content-center"
+                >
+                  <i class="bi bi-check2"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{pending_this_month|length}}</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Requests -->
+        <div class="col-12">
+          <script type="text/javascript">
+            $(document).ready(function () {
+              $("#dataTable").DataTable();
+            });
+          </script>
+          <div class="card" style="border-radius: 7px">
+            <br />
+            <div class="well-sm col-sm-12" style="padding-right: 5px">
+              <button
+                type="button"
+                style="float: right"
+                class="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#verticalycentered"
+              >
+                <i class="bi bi-plus-square"></i>
+                Submit a Request
+              </button>
+              <div class="modal fade" id="verticalycentered" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Add a New Request</h5>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      <form
+                        class="row g-3"
+                        action="/requests/create/"
+                        method="POST"
+                        enctype="multipart/form-data"
+                      >
+                        {% csrf_token %} {{form|crispy}}
+                        <button type="submit" class="btn btn-primary my-3">
+                          Submit
+                        </button>
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title" style="color: black">Recent Requests</h5>
+              <table id="dataTable" class="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col" style="text-align: center">Number</th>
+                    <th scope="col" style="text-align: center">Type</th>
+                    <th scope="col" style="text-align: center">
+                      Date Submitted
+                    </th>
+                    <th scope="col" style="text-align: center">Officer</th>
+                    <th scope="col" style="text-align: center">Status</th>
+                    <th scope="col" style="text-align: center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for request in submitted_this_month %}
+                  <tr style="text-align: center">
+                    <th scope="row"><a href="#">#{{request.id}}</a></th>
+                    <td>{{request.request_type}}</td>
+                    <td>{{request.created_at}}</td>
+                    <td>{{request.assignee}}</td>
+                    <td>
+                      {% if request.is_closed %}
+                  <span class="badge bg-success">{{request.status}}</span>
+                  {% elif request.is_assigned and not request.is_closed %}
+                  <span class="badge bg-danger">{{request.status}}</span>
+                  {% else %}
+                  <span class="badge bg-warning">{{request.status}}</span>
+                  {% endif %}
+                    </td>
+                    <th style="text-align: center" scope="row">
+                      <a href="/requests/{{request.id}}/"
+                        ><i
+                          class="bi bi-eye-fill"
+                          data-toggle="tooltip"
+                          data-placement="top"
+                          title="View"
+                        ></i
+                      ></a>
+                    </th>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!-- End Recent Sales -->
+      </div>
+    </div>
+    <!-- End Left side columns -->
+  </div>
+</section>
+{% endif %} {% endblock %}

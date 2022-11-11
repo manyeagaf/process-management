@@ -1,0 +1,59 @@
+
+<aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'officer:dashboard' %}">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <!-- End Dashboard Nav -->
+      <li class="nav-item">
+        <a
+          class="nav-link collapsed"
+          data-bs-target="#components-nav"
+          data-bs-toggle="collapse"
+          href="#"
+        >
+          <i class="bi bi-menu-button-wide"></i><span>Requests</span
+          ><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+         <ul
+          id="components-nav"
+          class="nav-content"
+          data-bs-parent="#sidebar-nav"
+        >
+        <li > 
+          <a href="{% url 'officer:active-requests' %}"  {% if page == 'active' %} style = "color:red" {% endif %} >
+            <i class="bi bi-circle" ></i><span>Active</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'officer:pending-requests' %}" {% if page == 'pending'%} style = "color:red" {% endif %}>
+            <i class="bi bi-circle"></i><span>Pending</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'officer:closed-requests' %}" {% if page == 'closed'%} style = "color:red" {% endif %} >
+            <i class="bi bi-circle"></i><span>Closed</span>
+          </a>
+        </li>
+          <li > 
+            <a href="{% url 'officer:assigned-requests' %}"  {% if page == 'assigned'%} style = "color:red" {% endif %} >
+              <i class="bi bi-circle" ></i><span>Assigned</span>
+            </a>
+          </li>
+          
+          
+        </ul>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'users:logout' %}"  >
+          <i class="bi bi-box-arrow-in-right"></i>
+          <span>Logout</span>
+        </a>
+      </li>
+      <!-- End Login Page Nav -->
+    </ul>
+  </aside>
