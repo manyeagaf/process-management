@@ -7,23 +7,24 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput)
 
     def clean_username(self):
-        self._name = self.cleaned_data['username']
-        if not(User.objects.filter(username=self._name).exists()):
+        self.email = self.cleaned_data['email']
+        if not(User.objects.filter(email=self.email).exists()):
             raise forms.ValidationError("Account with this user name does not exist")
-        if not(User.objects.get(username=self._name).is_active):
+        if not(User.objects.get(email=self.email).is_active):
             raise forms.ValidationError("Account with this user name is inactive contact us to get your account activated")
-        return self._name
+        return self.email
     def clean_password(self):
-        name = self._name
-        password = self.cleaned_data['password']
-#        try:
-        if User.objects.filter(username=name).exists():
-            if not(User.objects.get(username=name).check_password(password)):
+        # email = self.email
+        # password = self.cleaned_data['password']
+        try:
+            if User.objects.filter(email=self.cleaned_data['email']).exists():
+                if not(User.objects.get(email=self.cleaned_data['email']).check_password(self.cleaned_data['password'])):
 
-                raise forms.ValidationError(f"The password for {name} account is invalid")
-#        except:
-#            forms.ValidationError("The user does not exist")
-        return password
+                    raise forms.ValidationError(f"The password for {email} account is invalid")
+        except:
+
+            forms.ValidationError("The user does not exist")
+        return self.cleaned_data['password']
 
 
 class UserRegistrationForm(UserCreationForm):

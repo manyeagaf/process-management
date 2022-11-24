@@ -9,23 +9,23 @@ from django.contrib import messages
 
 def user_login(request):
     if request.method == 'POST':
-        print('Ok')
-        print(request.POST.get('username'))
-        print(request.POST.get('password')) 
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        user = user = authenticate(request,
-                                email=email,
-                                password=password,
-                                )
-        login(request,user)
-        return redirect('/')
+        # print('Ok')
+        # print(request.POST.get('username'))
+        # print(request.POST.get('password')) 
+        # email = request.POST.get('email')
+        # password = request.POST.get('password')
+        # user = user = authenticate(request,
+        #                         email=email,
+        #                         password=password,
+        #                         )
+        # login(request,user)
+        # return redirect('/')
         form = LoginForm(request.POST)
         if form.is_valid():
-            print(form.cleaned_data)
+            
             cd = form.cleaned_data
             user = authenticate(request,
-                                username=cd['username'],
+                                email=cd['email'],
                                 password=cd['password']
                                 )
             
