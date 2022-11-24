@@ -12,10 +12,10 @@ def user_login(request):
         print('Ok')
         print(request.POST.get('username'))
         print(request.POST.get('password')) 
-        username = request.POST.get('username')
+        email = request.POST.get('email')
         password = request.POST.get('password')
         user = user = authenticate(request,
-                                username=username,
+                                email=email,
                                 password=password,
                                 )
         login(request,user)

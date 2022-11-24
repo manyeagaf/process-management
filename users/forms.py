@@ -3,7 +3,7 @@ from .models import UserPrivilege,User
 from django.contrib.auth.forms import UserCreationForm
 
 class LoginForm(forms.Form):
-    username = forms.CharField(max_length=50, label="username")
+    email = forms.CharField(max_length=50, label="Email")
     password = forms.CharField(widget=forms.PasswordInput)
 
     def clean_username(self):
