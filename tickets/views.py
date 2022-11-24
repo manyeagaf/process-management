@@ -131,7 +131,7 @@ def comment_create(request, request_id):
         attachment.comment = comment
         attachment.save()
     # send_mail()
-    return redirect("/requests/" + str(request_id))
+    return redirect(f"/{user.get_user_type_display()}/requests/{request_id}")
 
 
 @ login_required
