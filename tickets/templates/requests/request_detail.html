@@ -1,4 +1,6 @@
-{% extends 'admin_user/base.html' %}
+
+{% extends 'requests/base.html' %}
+
 {% block content %}
 <div class="pagetitle">
     <h1>Request</h1>
@@ -60,7 +62,7 @@
         </div>
       </div>
   
-      <div class="col-lg-8">
+      <div class="col-lg-8" id = 'comments'>
         <div class="card">
           <div class="card-body">
             <h3 class="card-title" style="color: black">
@@ -132,6 +134,7 @@
               </div>
             </div>
             
+            
             <hr />
             {% for comment in recent_comments %}
             <div>
@@ -155,6 +158,7 @@
               </div>
               {% endfor %}
             </div>
+         
             <hr />
             {% endfor %}
             <br />
@@ -162,7 +166,7 @@
             {% if request.is_archieved %}
             <h4 style = "color:red">This request have been archieved</h4>
             {% else %}
-            <form action="/requests/comment/{{ request.request_id }}/"
+            <form 
             method="post"
             enctype="multipart/form-data"
             >
@@ -172,11 +176,12 @@
               <div class="row gy-4">
                 <div class="col-md-12">
                   <textarea
+                  id = 'chat-message-input'
                     class="form-control"
                     name="message"
                     rows="6"
                     placeholder="Message"
-                    required
+                    
                   ></textarea>
                 </div>
                 <input
@@ -194,7 +199,7 @@
                       </small>
                       
                         <div class="row mt-3">
-                          <button type="submit" class="btn btn-primary my-2">Update</button>
+                          <button id = 'chat-message-submit' type="submit" class="btn btn-primary my-2">Update</button>
                           {% if request.status.slug == 'closed' %}
                           This ticket was closed on {{ request.closed_at }} send a message to re-open it
                           {% else %}
@@ -253,3 +258,54 @@
   </section>
 {% endblock %}
 
+{% block domready %}
+var request_id = {{ request.request_id }}
+	console.log(request_id)
+	var url = 'ws://' + window.location.host + '/ws/chat/room/' + request_id + '/';
+	var chatSocket = new WebSocket(url);
+  chatSocket.onmessage = function(e) {
+		var data = JSON.parse(e.data);
+		var message = data.message;
+    console.log(message);
+		var dateOptions = {hour: 'numeric', minute: 'numeric', hour12: true};
+		var datetime = new Date(data['datetime']).toLocaleString('en',
+		dateOptions);
+		var isMe = data.user === '{{ request.user }}';
+		var source = isMe ? 'me' : 'other';
+		var name = isMe ? 'Me' : data.user;
+		var $comments = $('#comments');
+		$comments.append('<div class="message ' + source + '">' +
+		'<strong>' + name + '</strong> ' +
+		'<span class="date">' + datetime + '</span><br>' +
+		message +
+		'</div>');
+		
+		};
+    chatSocket.onclose = function(e) {
+      console.error('Chat socket closed unexpectedly');
+      };
+
+var $input = $('#chat-message-input');
+var $submit = $('#chat-message-submit');
+$submit.click(function() {
+var message = $input.val();
+
+if(message) {
+  console.log(message);
+// send message in JSON format
+chatSocket.send(JSON.stringify({'message': message}));
+// clear input
+$input.val('');
+// return focus
+$input.focus();
+}
+});
+
+$input.focus();
+$input.keyup(function(e) {
+if (e.which === 13) {
+// submit with enter / return key
+$submit.click();
+}
+});
+{% endblock %}

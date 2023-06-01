@@ -24,11 +24,12 @@ def user_login(request):
         if form.is_valid():
             
             cd = form.cleaned_data
+            print(cd)
             user = authenticate(request,
                                 email=cd['email'],
                                 password=cd['password']
                                 )
-            
+            print(user)
             if user is not None:
                 if user.is_active:
                     print('Active')

@@ -30,6 +30,7 @@ urlpatterns = [
     path('officer/',include('officer.urls',namespace = 'officer')),
     path('requests/',include('tickets.urls',namespace = 'tickets')),
     path('access-control/',include('access_control.urls',namespace='superAdmin')),
+    path('chat/', include('chat.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,

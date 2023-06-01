@@ -105,7 +105,7 @@ def request_detail(request, request_id):
 
     context["recent_comments"] = reversed(recent_comments)
     context["comments"] = comments
-    print(generate_request_id())
+    
     return render(request, 'requests/request_detail.html', context)
 
 @ login_required
@@ -160,6 +160,7 @@ def request_create(request):
             attachment.request = rq
             attachment.save()
         messages.success(request,"Request {} created successfilly".format(rq.request_id))
+        fake_requests(20)
         return redirect("/")
     else:
         return HttpResponse("Cannot create request.Please contact the developer for assistance")

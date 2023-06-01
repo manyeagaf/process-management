@@ -1,12 +1,4 @@
-<!--
-=========================================================
-* RBGH CSD Ticketing System - v1.0.0
-=========================================================
-* Copyright  Benjamin Nai Ako (www.linkedin.com/in/benjamin-nai-ako)
-* Coded by Benjamin Nai Ako
-=========================================================
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
--->
+
 {% load static %}
 {% load crispy_forms_tags %}
 <!DOCTYPE html>
@@ -200,7 +192,12 @@
       class="back-to-top d-flex align-items-center justify-content-center"
       ><i class="bi bi-arrow-up-short"></i
     ></a>
-
+    <script>
+      $(document).ready(function() {
+      {% block domready %}
+      {% endblock %}
+      });
+      </script>
     <script type = 'text/javascript'>
       let now = {% now 'Y'%};
       console.log(now);
@@ -216,6 +213,7 @@
       
   
     </script>
+
 
     <!-- Vendor JS Files -->
     <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>

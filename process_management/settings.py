@@ -39,16 +39,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'users.apps.UsersConfig',
     'tickets.apps.TicketsConfig',
     'admin_user.apps.AdminConfig',
     'officer.apps.OfficerConfig',
     'branch.apps.BranchConfig',
     'access_control.apps.AccessControlConfig',
+    'chat.apps.ChatConfig',
 
     'crispy_forms',
+    'channels',
 ]
+
+ASGI_APPLICATION = 'process_management.asgi.application'
 
 MIDDLEWARE = [
     
@@ -60,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'process_management.urls'
 
@@ -81,7 +85,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'process_management.wsgi.application'
 
-
+ASGI_APPLICATION = 'process_management.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
@@ -145,3 +149,12 @@ LOGOUT_REDIRECT_URL = "/accounts/login/"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
