@@ -1,16 +1,17 @@
 from django.shortcuts import render
 
-from chat.models import Room
+from chat.models import Conversation
 
 
 def index_view(request):
     return render(request, 'index.html', {
-        'rooms': Room.objects.all(),
+        'rooms': Conversation.objects.all(),
     })
 
 
-def room_view(request, room_name):
-    chat_room, created = Room.objects.get_or_create(name=room_name)
+def room_view(request, room_id):
+    chat_room = Conversation.objects.get(pk=room_id)
     return render(request, 'room.html', {
-        'room': chat_room,
+        'conversation': chat_room,
+        
     })

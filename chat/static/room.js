@@ -1,7 +1,8 @@
 console.log("Sanity check from room.js.");
 
 const roomName = JSON.parse(document.getElementById('roomName').textContent);
-
+const userId = JSON.parse(document.getElementById('userId').textContent);
+console.log(userId);
 let chatLog = document.querySelector("#chatLog");
 let chatMessageInput = document.querySelector("#chatMessageInput");
 let chatMessageSend = document.querySelector("#chatMessageSend");
@@ -36,7 +37,10 @@ chatMessageInput.onkeyup = function(e) {
 chatMessageSend.onclick = function() {
     if (chatMessageInput.value.length === 0) return;
     chatSocket.send(JSON.stringify({
+        "type":"text",
         "message": chatMessageInput.value,
+        "from_user":"3",
+        "to_user":"2"
     }));
     chatMessageInput.value = "";
 };
@@ -45,7 +49,7 @@ chatMessageSend.onclick = function() {
 let chatSocket = null;
 
 function connect() {
-    chatSocket = new WebSocket("ws://" + window.location.host + "/ws/chat/" + roomName + "/");
+    chatSocket = new WebSocket("ws://" + window.location.host + "/ws/chat/2__3/3/");
 
     chatSocket.onopen = function(e) {
         console.log("Successfully connected to the WebSocket.");
@@ -64,11 +68,17 @@ function connect() {
         console.log(data);
 
         switch (data.type) {
+            
             case "chat_message":
-                chatLog.value += data.message + "\n";
+                chatLog.value +=data.message["content"] + "\n";
                 break;
+            case "image":
+                chatLog.value += data.message + "\n";
+                console.log("Image");
+                break
             default:
-                console.error("Unknown message type!");
+                console.log(data.message);
+                console.log("Unknown");
                 break;
         }
 
