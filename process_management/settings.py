@@ -45,12 +45,13 @@ INSTALLED_APPS = [
     'officer.apps.OfficerConfig',
     'branch.apps.BranchConfig',
     'access_control.apps.AccessControlConfig',
-    'chat.apps.ChatConfig',
+    
 
     'crispy_forms',
     'channels',
     'rest_framework',
     "corsheaders",
+    'chat_app',
 ]
 
 ASGI_APPLICATION = 'process_management.asgi.application'

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, Privilege, Logging, UserPrivilege,UserType
+from .models import Profile, User, Privilege, Logging, UserPrivilege,UserType
 
 class CustomUserAdmin(UserAdmin):
 
@@ -43,7 +43,10 @@ class UserTypeAdmin(admin.ModelAdmin):
     list_display = ('id', "title")
     prepopulated_fields = {"slug":("title",)}
 
-
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ("id","user")
+    
 
 
 

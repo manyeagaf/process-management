@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.db import models
 from django.contrib.auth.base_user import BaseUserManager
 from django.utils.translation import gettext_lazy as _
-
+import uuid
 
 class CustomUserManager(BaseUserManager):
     """
@@ -147,3 +147,8 @@ class Logging(models.Model):
 class UserType(models.Model):
     title = models.CharField(max_length= 150)
     slug = models.SlugField(max_length=200,null= True,blank = True)
+
+
+class Profile(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
